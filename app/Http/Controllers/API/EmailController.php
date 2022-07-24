@@ -75,4 +75,17 @@ class EmailController extends Controller
 
         return $this->successResponse('Search results', $search);
     }
+
+     /**
+     * Search by recipient.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function searchRecipient(Request $request)
+    {
+        $search = (new SearchQuery())->searchRecipient($request);
+
+        return $this->successResponse('Search results', $search);
+    }
 }

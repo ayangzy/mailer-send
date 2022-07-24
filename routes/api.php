@@ -25,4 +25,5 @@ Route::prefix('v1')->group(function(){
     });
 
     Route::get('/search/email', [EmailController::class, 'searchEmail'])->name('searchEmail');
+    Route::get('/search/recipient', [EmailController::class, 'searchRecipient'])->name('searchRecipient');
 });

@@ -19,4 +19,11 @@ class SearchQuery
        
     }
 
+    public function searchRecipient(Request $request)
+    {
+        $searchString = $request->input('search');
+        $recipient = Recipient::where('to', 'LIKE', '%' . $searchString . '%')->paginate(10);
+        return $recipient;
+    }
+
 }
