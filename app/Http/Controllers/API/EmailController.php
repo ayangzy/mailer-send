@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+
+use App\Utils\SearchQuery;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
 use Illuminate\Http\JsonResponse;
@@ -59,5 +61,18 @@ class EmailController extends Controller
         $recipients = (new EmailService())->getRecipients($id);
 
         return $this->successResponse('Recipients retrieved successfully', $recipients);
+    }
+
+    /**
+     * Search by sender, subject of email.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function searchEmail(Request $request)
+    {
+        $search = (new SearchQuery())->searchEmail($request);
+
+        return $this->successResponse('Search results', $search);
     }
 }

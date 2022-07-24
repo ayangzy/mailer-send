@@ -23,4 +23,6 @@ Route::prefix('v1')->group(function(){
         Route::get('/{id}', [EmailController::class, 'show'])->name('show');
         Route::get('/{id}/recipients', [EmailController::class, 'recipient'])->name('recipient');
     });
+
+    Route::get('/search/email', [EmailController::class, 'searchEmail'])->name('searchEmail');
 });
