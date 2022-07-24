@@ -19,5 +19,6 @@ use App\Http\Controllers\API\EmailController;
 Route::prefix('v1')->group(function(){
     Route::prefix('emails')->name('email.')->group(function(){
         Route::post('send', [EmailController::class, 'store'])->name('store');
+        Route::get('/', [EmailController::class, 'index'])->name('index');
     });
 });

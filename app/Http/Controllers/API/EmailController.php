@@ -10,6 +10,18 @@ use App\Http\Controllers\Controller;
 
 class EmailController extends Controller
 {
+    /**
+     * Display a listing of Emails sent.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(): JsonResponse
+    {
+        $emails = (new EmailService())->getEmails();
+
+        return $this->successResponse('Email retrieved successfully', $emails);
+    }
+    
      /**
      * Store a newly created email.
      *

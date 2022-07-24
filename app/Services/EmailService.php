@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailService
 {
+    public function getEmails()
+    {
+        return Email::query()->paginate(10);
+    }
+
     public function sendEmail(EmailRequest $request)
     {
         DB::beginTransaction();
