@@ -21,8 +21,8 @@ class EmailController extends Controller
 
         return $this->successResponse('Email retrieved successfully', $emails);
     }
-    
-     /**
+
+    /**
      * Store a newly created email.
      *
      * @param  \App\Http\Requests\EmailRequest  $request
@@ -33,5 +33,31 @@ class EmailController extends Controller
         $email = (new EmailService())->sendEmail($request);
 
         return $this->successResponse('Email posted successfully');
+    }
+
+    /**
+     * Display a single email.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id): JsonResponse
+    {
+        $email = (new EmailService())->showEmail($id);
+
+        return $this->successResponse('Email retrieved successfully', $email);
+    }
+
+    /**
+     * Display a list of recipients emails.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function recipient($id)
+    {
+        $recipients = (new EmailService())->getRecipients($id);
+
+        return $this->successResponse('Recipients retrieved successfully', $recipients);
     }
 }

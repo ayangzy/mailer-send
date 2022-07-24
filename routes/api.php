@@ -20,5 +20,7 @@ Route::prefix('v1')->group(function(){
     Route::prefix('emails')->name('email.')->group(function(){
         Route::post('send', [EmailController::class, 'store'])->name('store');
         Route::get('/', [EmailController::class, 'index'])->name('index');
+        Route::get('/{id}', [EmailController::class, 'show'])->name('show');
+        Route::get('/{id}/recipients', [EmailController::class, 'recipient'])->name('recipient');
     });
 });

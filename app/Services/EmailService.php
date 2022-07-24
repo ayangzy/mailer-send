@@ -9,6 +9,7 @@ use App\Models\Attachment;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\EmailRequest;
 use Illuminate\Support\Facades\Mail;
+use App\Exceptions\NotFoundException;
 
 class EmailService
 {
@@ -40,6 +41,32 @@ class EmailService
         return $email;
     }
 
+    public function showEmail($id)
+    {
+        $email = Email::find($id);
+
+        if (!$email) {
+            throw new NotFoundException('Email not found');
+        }
+
+        return $email;
+    }
+
+
+    public function getRecipients($id)
+    {
+        $email = Email::find($id);
+
+        if (!$email) {
+            throw new NotFoundException('Email not found');
+        }
+
+        $recipients = $email->recipients()->paginate(10);
+
+        return $recipients;
+    }
+
+    
 
     private function createEmail($data): object
     {
