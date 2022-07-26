@@ -18,22 +18,14 @@
               <thead class="thead-dark">
                 <tr>
                   <th>#</th>
-                  <th>Sender</th>
                   <th>Recipient</th>
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody v-for="(recipient, index) in recipients" :key="index">
                 <tr>
-                  <td>1</td>
-                  <td>Tiger Nixon</td>
-                  <td>System Architect</td>
-                </tr>
-
-                <tr>
-                  <td>2</td>
-                  <td>Tiger Nixon</td>
-                  <td>System Architect</td>
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ recipient.to }}</td>
                 </tr>
               </tbody>
             </table>
@@ -45,5 +37,28 @@
 </template>
 
 <script>
-export default {};
+import axios from 'axios';
+import {defineComponent, onMounted, ref} from 'vue';
+import {useRoute} from 'vue-router';
+
+export default defineComponent({
+  setup() {
+    const route = useRoute();
+    const recipients = ref([]);
+
+    onMounted(async () => {
+      if(route.params.id) {
+        console.log(route.params.id)
+        let response = await axios.get(`/api/v1/emails/${route.params.id}/recipients`);
+        recipients.value = response.data.data.data;
+        console.log(response.data.data);
+      }
+    });
+
+    return {
+        recipients
+    }
+
+  }
+})
 </script>

@@ -38,6 +38,12 @@
                   <i class="flaticon-pen mr-1"></i>
                   Compose new message
                 </h3>
+
+                <div class="text-sm text-danger" if="errors != ''">
+                  <p v-for="error in errors" class="mb-0" :key="error">
+                    <small>{{ error }} </small>
+                  </p>
+                </div>
               </div>
               <div class="email-compose-fields">
                 <form>
@@ -50,18 +56,18 @@
                         type="text"
                         class="form-control"
                         id="to"
-                        name="to"
+                        v-model="form.from"
                       />
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="cc" class="col-form-label col-md-1">To :</label>
+                    <label for="to" class="col-form-label col-md-1">To :</label>
                     <div class="col-md-11">
                       <input
                         type="text"
                         class="form-control"
-                        id="cc"
-                        name="cc"
+                        id="to"
+                        v-model="form.recipient[to]"
                       />
                     </div>
                   </div>
@@ -74,7 +80,7 @@
                         type="text"
                         class="form-control"
                         id="subject"
-                        name="subject"
+                        v-model="form.subject"
                       />
                     </div>
                   </div>
@@ -84,7 +90,7 @@
                     >
                     <div class="col-md-11">
                       <textarea
-                        name="textcontent"
+                        v-model="form.text_content"
                         class="form-control"
                         id=""
                         cols="10"
@@ -99,7 +105,7 @@
                     >
                     <div class="col-md-11">
                       <textarea
-                        name="textcontent"
+                        v-model="form.html_content"
                         class="form-control"
                         id=""
                         cols="10"
@@ -110,10 +116,10 @@
 
                   <div class="form-group row">
                     <label for="subject" class="col-form-label col-md-1"
-                      >Attach file(s): </label
-                    >
+                      >Attach file(s):
+                    </label>
                     <div class="col-md-11">
-                     <input type="file" name="" class="form-control">
+                      <input type="file" class="form-control" />
                     </div>
                   </div>
                 </form>
@@ -121,7 +127,9 @@
               <div class="email-editor">
                 <div id="editor"></div>
                 <div class="email-action">
-                  <button class="btn btn-primary">Send</button>
+                  <button class="btn btn-primary" @click="sendEmail">
+                    Send
+                  </button>
                   <button class="btn btn-danger">Cancel</button>
                 </div>
               </div>
@@ -135,5 +143,39 @@
 
 
 <script>
-export default {};
+import { ref, reactive } from "@vue/runtime-core";
+import axios from "axios";
+export default {
+  setup() {
+    const errors = ref([]);
+    const form = reactive({
+      from: "",
+      recipient: [],
+      subject: "",
+      text_content: "",
+      html_content: "",
+    });
+
+    const sendEmail = async () => {
+      try {
+        await axios.post("api/v1/emails/send", form);
+      } catch (e) {
+        if (e.response.status == 422) {
+          var data = [];
+          for (const key in e.response.data.errors) {
+            console.log(response.data.errors);
+            data.push(e.response.data.errors[key][0]);
+          }
+          errors.value = data;
+        }
+      }
+    };
+
+    return {
+      form,
+      errors,
+      sendEmail,
+    };
+  },
+};
 </script>

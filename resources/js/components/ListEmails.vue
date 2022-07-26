@@ -25,43 +25,39 @@
                 </tr>
               </thead>
 
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Tiger Nixon</td>
-                  <td>System Architect</td>
-                  <td>Edinburgh</td>
+              <tbody v-if="emails && emails.length > 0">
+                <tr v-for="(email, index) in emails" :key="index">
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ email.from }}</td>
+                  <td>{{ email.subject }}</td>
+                  <td v-if="email.status === 'sent'">
+                    <button class="btn btn-success btn-round btn-xs">
+                      {{ email.status }}
+                    </button>
+                  </td>
+                  <td v-else>
+                    <button class="btn btn-primary btn-round btn-xs">
+                      {{ email.status }}
+                    </button>
+                  </td>
                   <td>
-                    <div class="form-button-action">
-                      <button type="button" class="btn btn-info btn-sm">
-                        <router-link to="/view-email">view email</router-link>
+                    <div class="form-button-action ">
+                      <button type="button" class="btn btn-info btn-sm ">
+                        <router-link :to="`/view-email/${email.id}`" class="btn btn-info btn-sm ">  view email </router-link>
+                       
                       </button>
                       &nbsp;
 
-                      <button class="btn btn-info btn-sm">
-                        <router-link to="/list-recipients">view recipients</router-link>
+                      <button class="btn btn-primary btn-sm">
+                         <router-link :to="`/list-recipients/${email.id}`" class="btn-primary btn-sm">  view recipients </router-link>
                       </button>
                     </div>
                   </td>
                 </tr>
-
+              </tbody>
+              <tbody v-else>
                 <tr>
-                  <td>2</td>
-                  <td>Tiger Nixon</td>
-                  <td>System Architect</td>
-                  <td>Edinburgh</td>
-                  <td>
-                    <div class="form-button-action">
-                      <button type="button" class="btn btn-info btn-sm">
-                        view email
-                      </button>
-                      &nbsp;
-
-                      <button class="btn btn-info btn-sm">
-                        view recipients
-                      </button>
-                    </div>
-                  </td>
+                  <td class="text-center" colspan="3">No record found.</td>
                 </tr>
               </tbody>
             </table>
@@ -73,5 +69,25 @@
 </template>
 
 <script>
-export default {};
+import { onMounted, ref } from "@vue/runtime-core";
+import axios from "axios";
+export default {
+  setup() {
+    const emails = ref([]);
+
+    const getEmail = async (page) => {
+      let res = await axios.get("/api/v1/emails?page=" + page);
+      emails.value = res.data.data.data;
+      console.log(res.data.data);
+    };
+
+    onMounted(getEmail());
+
+    return {
+      emails,
+    };
+
+    
+  },
+};
 </script>

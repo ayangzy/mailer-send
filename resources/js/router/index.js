@@ -19,12 +19,12 @@ const routes = [
     },
 
     {
-        path: '/list-recipients',
+        path: '/list-recipients/:id',
         component: ListRecipients,
     },
 
     {
-        path: '/view-email',
+        path: '/view-email/:id',
         component: ViewEmail
     },
 
