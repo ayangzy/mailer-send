@@ -52,7 +52,7 @@ export default defineComponent({
       if(route.params.id) {
         console.log(route.params.id)
         let response = await axios.get(`/api/v1/emails/${route.params.id}/recipients`);
-        recipients.value = response.data.data.data;
+        recipients.value = response.data.data;
         console.log(response.data.data);
       }
     });

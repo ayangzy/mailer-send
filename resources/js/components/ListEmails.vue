@@ -82,9 +82,9 @@ export default {
   setup() {
     const emails = ref([]);
     const searchValue = ref("");
-    const getEmail = async (page) => {
-      let res = await axios.get("/api/v1/emails?page=" + page);
-      emails.value = res.data.data.data;
+    const getEmail = async () => {
+      let res = await axios.get("/api/v1/emails");
+      emails.value = res.data.data;
     };
     const filteredEmails = computed(() =>
       emails.value.filter(

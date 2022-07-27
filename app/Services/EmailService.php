@@ -15,7 +15,7 @@ class EmailService
 {
     public function getEmails()
     {
-        return Email::query()->paginate(10);
+        return Email::query()->get();
     }
 
     public function sendEmail(EmailRequest $request)
@@ -61,7 +61,7 @@ class EmailService
             throw new NotFoundException('Email not found');
         }
 
-        $recipients = $email->recipients()->paginate(10);
+        $recipients = $email->recipients()->get();
 
         return $recipients;
     }
