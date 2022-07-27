@@ -59,7 +59,8 @@ MAIL_FROM_ADDRESS=testuer@gmail.com
 MAIL_FROM_NAME="MiniSend"
 ```
 
-NOTE: Because the app could be used by thousand of clients, i have decided to make youse of queues, so Make sure you change your queue connection to database
+NOTE: Because the app could be used by thousand of clients, i have decided to make youse of queues, so Make sure you change your queue connection to database <br>
+
 ``
 QUEUE_CONNECTION=database
 ``
