@@ -38,7 +38,6 @@
                   <i class="flaticon-pen mr-1"></i>
                   Compose new message
                 </h3>
-
                 <div class="text-sm text-danger" if="errors != ''">
                   <p v-for="error in errors" class="mb-0" :key="error">
                     <small>{{ error }} </small>
@@ -60,15 +59,40 @@
                       />
                     </div>
                   </div>
-                  <div class="form-group row">
-                    <label for="to" class="col-form-label col-md-1">To :</label>
-                    <div class="col-md-11">
+                  <div
+                    class="form-group row"
+                    v-for="(item, index) in recipients"
+                    :key="index"
+                  >
+                    <label :for="`to-${index}`" class="col-form-label col-md-1"
+                      >To :</label
+                    >
+                    <div class="col-md-9">
                       <input
                         type="text"
                         class="form-control"
-                        id="to"
-                        v-model="form.recipient[to]"
+                        :placeholder="item.text"
+                        v-model="item.value"
                       />
+                    </div>
+                    <div
+                      class="col-md-2"
+                      v-if="index === Object.keys(recipients).length - 1"
+                    >
+                      <button
+                        @click.prevent="onAddNewRecipient"
+                        class="btn btn-primary btn-block, w-100"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    <div class="col-md-2" v-else>
+                      <button
+                        @click.prevent="onRemoveRecipient(index)"
+                        class="btn btn-warning btn-block, w-100"
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -98,7 +122,6 @@
                       ></textarea>
                     </div>
                   </div>
-
                   <div class="form-group row">
                     <label for="subject" class="col-form-label col-md-1"
                       >Html Content :</label
@@ -113,13 +136,17 @@
                       ></textarea>
                     </div>
                   </div>
-
                   <div class="form-group row">
                     <label for="subject" class="col-form-label col-md-1"
                       >Attach file(s):
                     </label>
                     <div class="col-md-11">
-                      <input type="file" class="form-control" />
+                      <input
+                        type="file"
+                        class="form-control"
+                        @change="handleImageSelected"
+                        multiple
+                      />
                     </div>
                   </div>
                 </form>
@@ -140,41 +167,99 @@
     </div>
   </div>
 </template>
-
-
 <script>
-import { ref, reactive } from "@vue/runtime-core";
+import { ref, reactive, onMounted } from "@vue/runtime-core";
 import axios from "axios";
+import Swal from "sweetalert2";
 export default {
   setup() {
     const errors = ref([]);
+    let fileUrls = ref([]);
     const form = reactive({
       from: "",
       recipient: [],
       subject: "",
       text_content: "",
       html_content: "",
+      file: [],
     });
-
+    const recipients = ref([]);
     const sendEmail = async () => {
-      try {
-        await axios.post("api/v1/emails/send", form);
-      } catch (e) {
-        if (e.response.status == 422) {
-          var data = [];
-          for (const key in e.response.data.errors) {
-            console.log(response.data.errors);
-            data.push(e.response.data.errors[key][0]);
+      if (recipients.value.length === 0) return;
+      recipients.value.forEach((item) => {
+        if (item.value === "") return;
+      });
+      if (form.file.length === 0) return;
+      form.recipient = recipients.value.map((item) => {
+        return { to: item.value };
+      });
+      if (validateFormData()) {
+        try {
+          const response = await axios.post("/api/v1/emails/send", form);
+
+          if (response.data.statusCode === 200) {
+            Swal.fire({
+              icon: "success",
+              title: `${response.data.message}`,
+              showConfirmButton: false,
+              timer: 3000,
+            });
           }
-          errors.value = data;
+        } catch (e) {
+          if (e.response.status === 422) {
+            Swal.fire({
+              icon: "error",
+              title: `${e.response.data.message}`,
+              text: "Kindly fill all the fields",
+            });
+          }
         }
       }
+    };
+    const validateFormData = () => {
+      if (form.from === "") {
+        return false;
+      } else if (form.subject === "") {
+        return false;
+      } else if (form.recipient.length === 0) {
+        return false;
+      }
+      return true;
+    };
+    const onAddNewRecipient = () => {
+      recipients.value.push({ text: "to", value: "" });
+    };
+    const onRemoveRecipient = (indexPosition) => {
+      recipients.value = recipients.value.filter(
+        (item, index) => index !== indexPosition
+      );
+    };
+    onMounted(() => {
+      recipients.value.push({ text: "to", value: "" });
+    });
+    const handleImageSelected = (event) => {
+      if (event.target.files.length === 0) {
+        return;
+      }
+      Array.prototype.forEach.call(event.target.files, (file) => {
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.addEventListener("load", () => {
+          form.file.push(fileReader.result);
+        });
+      });
     };
 
     return {
       form,
       errors,
       sendEmail,
+      recipients,
+      onAddNewRecipient,
+      onRemoveRecipient,
+      validateFormData,
+      handleImageSelected,
+      fileUrls,
     };
   },
 };
