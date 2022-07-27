@@ -95,3 +95,8 @@ Note: To actually see that the email is queued and running on the background, en
 ``
 php artisan queue:work
 ``
+
+### API documentation
+I have also publish the postman api documentation for your reference
+
+https://documenter.getpostman.com/view/11101115/UzXKWeXA#257c4c2d-a9bc-47e8-acd6-521e1d51080c
