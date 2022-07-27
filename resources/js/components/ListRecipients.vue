@@ -10,6 +10,7 @@
                 type="search"
                 class="form-control"
                 placeholder="search..."
+                v-model="searchValue"
               />
             </div>
           </form>
@@ -22,7 +23,7 @@
                 </tr>
               </thead>
 
-              <tbody v-for="(recipient, index) in recipients" :key="index">
+              <tbody v-for="(recipient, index) in filteredRecipients" :key="index">
                 <tr>
                   <td>{{ index + 1 }}</td>
                   <td>{{ recipient.to }}</td>
@@ -38,13 +39,14 @@
 
 <script>
 import axios from 'axios';
-import {defineComponent, onMounted, ref} from 'vue';
+import {defineComponent, onMounted, ref, computed} from 'vue';
 import {useRoute} from 'vue-router';
 
 export default defineComponent({
   setup() {
     const route = useRoute();
     const recipients = ref([]);
+     const searchValue = ref("");
 
     onMounted(async () => {
       if(route.params.id) {
@@ -55,8 +57,17 @@ export default defineComponent({
       }
     });
 
+    const filteredRecipients = computed(() =>
+      recipients.value.filter(
+        (item) =>
+          item.to.toLowerCase().includes(searchValue.value.toLowerCase())
+      )
+    );
+
     return {
-        recipients
+        recipients,
+        filteredRecipients,
+        searchValue,
     }
 
   }

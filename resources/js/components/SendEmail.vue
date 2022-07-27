@@ -38,14 +38,9 @@
                   <i class="flaticon-pen mr-1"></i>
                   Compose new message
                 </h3>
-                <div class="text-sm text-danger" if="errors != ''">
-                  <p v-for="error in errors" class="mb-0" :key="error">
-                    <small>{{ error }} </small>
-                  </p>
-                </div>
               </div>
               <div class="email-compose-fields">
-                <form>
+                <form >
                   <div class="form-group row">
                     <label for="to" class="col-form-label col-md-1"
                       >From :</label
@@ -144,6 +139,7 @@
                       <input
                         type="file"
                         class="form-control"
+                        
                         @change="handleImageSelected"
                         multiple
                       />
@@ -189,43 +185,34 @@ export default {
       recipients.value.forEach((item) => {
         if (item.value === "") return;
       });
-      if (form.file.length === 0) return;
+     
       form.recipient = recipients.value.map((item) => {
         return { to: item.value };
       });
-      if (validateFormData()) {
-        try {
-          const response = await axios.post("/api/v1/emails/send", form);
-
-          if (response.data.statusCode === 200) {
-            Swal.fire({
-              icon: "success",
-              title: `${response.data.message}`,
-              showConfirmButton: false,
-              timer: 3000,
-            });
-          }
-        } catch (e) {
-          if (e.response.status === 422) {
-            Swal.fire({
-              icon: "error",
-              title: `${e.response.data.message}`,
-              text: "Kindly fill all the fields",
-            });
-          }
+     
+      try {
+        const response = await axios.post("/api/v1/emails/send", form);
+        if (response.data.statusCode === 200) {
+          Swal.fire({
+            icon: "success",
+            title: `${response.data.message}`,
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        }
+        clearFields();
+      } catch (e) {
+        if (e.response.status === 422) {
+          Swal.fire({
+            icon: "error",
+            title: `${e.response.data.message}`,
+            text: "Kindly fill all the fields",
+          });
         }
       }
+     
     };
-    const validateFormData = () => {
-      if (form.from === "") {
-        return false;
-      } else if (form.subject === "") {
-        return false;
-      } else if (form.recipient.length === 0) {
-        return false;
-      }
-      return true;
-    };
+   
     const onAddNewRecipient = () => {
       recipients.value.push({ text: "to", value: "" });
     };
@@ -237,17 +224,20 @@ export default {
     onMounted(() => {
       recipients.value.push({ text: "to", value: "" });
     });
+
     const handleImageSelected = (event) => {
-      if (event.target.files.length === 0) {
-        return;
-      }
       Array.prototype.forEach.call(event.target.files, (file) => {
-        let fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.addEventListener("load", () => {
-          form.file.push(fileReader.result);
-        });
+        form.file.push(file);
       });
+    };
+
+    const clearFields = () => {
+      form.from = "";
+      form.recipient = "";
+      form.subject = "";
+      form.text_content = "";
+      form.html_content = "";
+      form.file = "";
     };
 
     return {
@@ -257,9 +247,9 @@ export default {
       recipients,
       onAddNewRecipient,
       onRemoveRecipient,
-      validateFormData,
       handleImageSelected,
       fileUrls,
+      clearFields,
     };
   },
 };

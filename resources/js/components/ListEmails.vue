@@ -10,6 +10,7 @@
                 type="search"
                 class="form-control"
                 placeholder="search..."
+                v-model="searchValue"
               />
             </div>
           </form>
@@ -24,9 +25,8 @@
                   <th style="width: 10%">Action</th>
                 </tr>
               </thead>
-
               <tbody v-if="emails && emails.length > 0">
-                <tr v-for="(email, index) in emails" :key="index">
+                <tr v-for="(email, index) in filteredEmails" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ email.from }}</td>
                   <td>{{ email.subject }}</td>
@@ -41,15 +41,23 @@
                     </button>
                   </td>
                   <td>
-                    <div class="form-button-action ">
-                      <button type="button" class="btn btn-info btn-sm ">
-                        <router-link :to="`/view-email/${email.id}`" class="btn btn-info btn-sm ">  view email </router-link>
-                       
+                    <div class="form-button-action">
+                      <button type="button" class="btn btn-info btn-sm">
+                        <router-link
+                          :to="`/view-email/${email.id}`"
+                          class="btn btn-info btn-sm"
+                        >
+                          view email
+                        </router-link>
                       </button>
                       &nbsp;
-
                       <button class="btn btn-primary btn-sm">
-                         <router-link :to="`/list-recipients/${email.id}`" class="btn-primary btn-sm">  view recipients </router-link>
+                        <router-link
+                          :to="`/list-recipients/${email.id}`"
+                          class="btn-primary btn-sm"
+                        >
+                          view recipients
+                        </router-link>
                       </button>
                     </div>
                   </td>
@@ -67,27 +75,30 @@
     </div>
   </div>
 </template>
-
 <script>
-import { onMounted, ref } from "@vue/runtime-core";
+import { onMounted, ref, computed } from "@vue/runtime-core";
 import axios from "axios";
 export default {
   setup() {
     const emails = ref([]);
-
+    const searchValue = ref("");
     const getEmail = async (page) => {
       let res = await axios.get("/api/v1/emails?page=" + page);
       emails.value = res.data.data.data;
-      console.log(res.data.data);
     };
-
+    const filteredEmails = computed(() =>
+      emails.value.filter(
+        (item) =>
+          item.from.toLowerCase().includes(searchValue.value.toLowerCase()) ||
+          item.subject.toLowerCase().includes(searchValue.value.toLowerCase())
+      )
+    );
     onMounted(getEmail());
-
     return {
       emails,
+      searchValue,
+      filteredEmails,
     };
-
-    
   },
 };
 </script>
