@@ -20008,11 +20008,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     var clearFields = function clearFields() {
       form.from = "";
-      form.recipient = "";
+      form.recipient = [""];
       form.subject = "";
       form.text_content = "";
       form.html_content = "";
-      form.file = "";
+      form.file = [""];
     };
 
     return {
@@ -20686,6 +20686,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.html_content]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [_hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "file",
     "class": "form-control",
+    clearable: "true",
     onChange: _cache[5] || (_cache[5] = function () {
       return $setup.handleImageSelected && $setup.handleImageSelected.apply($setup, arguments);
     }),

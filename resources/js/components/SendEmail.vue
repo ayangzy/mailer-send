@@ -139,7 +139,7 @@
                       <input
                         type="file"
                         class="form-control"
-                        
+                        clearable="true" 
                         @change="handleImageSelected"
                         multiple
                       />
@@ -233,11 +233,11 @@ export default {
 
     const clearFields = () => {
       form.from = "";
-      form.recipient = "";
+      form.recipient = [""];
       form.subject = "";
       form.text_content = "";
       form.html_content = "";
-      form.file = "";
+      form.file = [""];
     };
 
     return {
