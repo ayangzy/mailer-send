@@ -31,7 +31,7 @@ You can simply clone ``mailer-send
 `` like below on your git bash <br>
 
 ``
-https://github.com/ayangzy/mailer-send.git
+git clone https://github.com/ayangzy/mailer-send.git
 ``
 
 After cloning the project, please run this command on the project directory <br>
