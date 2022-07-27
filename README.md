@@ -91,7 +91,8 @@ npm run dev
 ``
 to run the dev script defined in the project’s package.json file
 
-Note: To actually see that the email is queued and running on the background, ensure you run this command on your terminal
+## Important Note: 
+For the email to actually send to mailtrap, please ensure you run this command on your terminal.
 
 ``
 php artisan queue:work
