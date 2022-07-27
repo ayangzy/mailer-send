@@ -49,13 +49,13 @@ cp .env.example .env
 ``
 ### set smtp credentials
 ```
-MAIL_MAILER=smtp <br>
-MAIL_HOST=smtp.mailtrap.io <br>
-MAIL_PORT=2525 <br>
-MAIL_USERNAME=xxxxxxxxxx  (Your mailtrap username)<br>
-MAIL_PASSWORD=xxxxxxxx (Your mailtrap password)<br>
-MAIL_ENCRYPTION=tls <br>
-MAIL_FROM_ADDRESS=testuer@gmail.com <br>
+MAIL_MAILER=smtp 
+MAIL_HOST=smtp.mailtrap.io 
+MAIL_PORT=2525 
+MAIL_USERNAME=xxxxxxxxxx  (Your mailtrap username)
+MAIL_PASSWORD=xxxxxxxx (Your mailtrap password)
+MAIL_ENCRYPTION=tls 
+MAIL_FROM_ADDRESS=testuer@gmail.com 
 MAIL_FROM_NAME="MiniSend"
 ```
 
