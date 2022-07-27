@@ -1,64 +1,97 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Task Description
+Create a mini version of a transactional email app, let's call it MiniSend, where a client could send an email through a Laravel API and also would have the ability to see how many emails have been sent, and track more interesting data about them through a VueJS frontend
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Task Requirements
+### Email API <br>
+Allow sending emails with these fields: <br>
+-From (Sender) <br>
+-To (Recipient) <br>
+-Subject <br>
+-Text content <br>
+-HTML content <br>
+-Attachment(-s) <br>
 
-## About Laravel
+### A frontend
+A list of email activities
+Search by  <br>
+sender, recipient, subject  <br>
+Possible statuses:<br>
+-Posted <br>
+-Sent <br>
+-Failed <br>
+-A view of single email <br>
+-A list of emails for a recipient <br>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# Project Installation & Usage
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Note: This project uses Laravel 9, php 8 and vue 3 <br>
 
-## Learning Laravel
+You can simply clone ``mailer-send
+`` like below on your git bash <br>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+``
+https://github.com/ayangzy/mailer-send.git
+``
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+After cloning the project, please run this command on the project directory <br>
+``
+composer install
+``
+<br>
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Configure Environment
+Make sure you configure the .env environment file with your database details. Use the below commmand to create .env file.
 
-### Premium Partners
+``
+cp .env.example .env
+``
+### set smtp credentials
+```
+MAIL_MAILER=smtp <br>
+MAIL_HOST=smtp.mailtrap.io <br>
+MAIL_PORT=2525 <br>
+MAIL_USERNAME=xxxxxxxxxx  (Your mailtrap username)<br>
+MAIL_PASSWORD=xxxxxxxx (Your mailtrap password)<br>
+MAIL_ENCRYPTION=tls <br>
+MAIL_FROM_ADDRESS=testuer@gmail.com <br>
+MAIL_FROM_NAME="MiniSend"
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+NOTE: Because the app could be used by thousand of clients, i have decided to make youse of queues, so Make sure you change your queue connection to database
+``
+QUEUE_CONNECTION=database
+``
+### Generating app key
+``
+php artisan key:generate
+``
 
-## Contributing
+### Make Migration
+``
+php artisan migrate
+``
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Serving the application, run the below command
+``
+php artisan serve
+``
+### Install NPM packages
+Run
+``
+npm install
+``
+to install all the npm packages
 
-## Code of Conduct
+Run
+``
+npm run dev
+``
+to run the dev script defined in the project’s package.json file
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Note: To actually see that the email is queued and running on the background, ensure you run this command on your terminal
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+``
+php artisan queue:work
+``
